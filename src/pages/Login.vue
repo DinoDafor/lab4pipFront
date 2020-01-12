@@ -6,13 +6,11 @@
             {{form.login}}
             <TextInput v-model="form.password">Password:</TextInput>
             {{form.password}}
-
-            {{response}}
             <br/>
             {{error}}
 
 
-<!--            <router-link to="/registration">Перейти к Foo</router-link>-->
+            <!--            <router-link to="/registration">Перейти к Foo</router-link>-->
 
 
             <Button type="submit">Поздороваться со Свиньёй</Button>
@@ -154,11 +152,6 @@
             }
         },
         mounted() {
-
-
-            axios
-                .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-                .then(response => (this.info = response));
         },
         methods: {
 
@@ -176,13 +169,18 @@
                     this.createErrorToast("The password cannot be empty!", 3000)
                 } else { //сюда надо будет вставить пост запрос
                 }
-                axios.post('users/login', {
+                //todo пока что без валидации происходит отправка, для отладки
+                axios.post('http://192.168.1.42:8080/api/users/login', {
                     //заполняем данные для отправки
                     login: this.form.login,
                     password: this.form.password,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
 
                 })
                     .then(function (response) {
+                        alert(JSON.stringify(response.data));
                         //при ответе от сервера
 //todo здесь сделать логику присваивания от сервера + пуш роутера на мейн
                         // this.$router.push({ path: '/main' });
@@ -192,6 +190,7 @@
                     .catch(function (error) {
 
                         if (error.response) {//при ошибке от сервера
+
                             // let status = error.response.status;
                             // let data =error.response.data;
 
@@ -204,7 +203,7 @@
                             //НЕИЗВЕСТНАЯ ОШИБКА
                         }
 
-
+                        alert(error);
                         this.error = error;
                     }).finally(() => {
                     //Совершаем в любом случае

@@ -1,11 +1,11 @@
 <template>
     <div class="graph">
-<!--wi he сделать входными, через : -->
+        <!--wi he сделать входными, через : -->
         <canvas class="canvas"
                 ref="canvas"
                 width="250"
                 height="250"
-               />
+        />
 
     </div>
 </template>
@@ -15,10 +15,10 @@
         name: "Graph",
         props: {
             width: Number,
-            height:Number,
-            value:Number,
-            r:Number,
-            prevResults:Number,
+            height: Number,
+            value: Number,
+            r: Number,
+            prevResults: Number,
         },
         data() {
             return {
@@ -68,17 +68,17 @@
             //временно, это входные данные
             this.$props.width = 250;
             this.$props.height = 250;
-            this.$props.r = 50; //это должно быть пиксельно, раньше было 50 px
+            this.$props.r = 100; //это должно быть пиксельно, раньше было 50 px
             //временно
-
-            this.draw();
+this.draw1();
+            //this.draw();
             //Рисуем график
             // this.render();
             //
             // this.rUpdatingIntervalId = setInterval(this.updateR, 1000 / 60);
         },
-        methods:{//Тестовые методы для отрисовки
-            draw(){
+        methods: {//Тестовые методы для отрисовки
+            draw() {
                 let ctx = this.canvasContext;
                 //todo  временно, эти данные извне поступают
                 let width = this.$props.width;
@@ -191,7 +191,50 @@
                 ctx.stroke();
 
 
+            },
+            draw1() {
+                let ctx = this.canvasContext;
+                //todo  временно, эти данные извне поступают
+                let width = this.$props.width;
+                let height = this.$props.height;
+                let radius = this.$props.r;
+//todo возможно убрать
+                ctx.clearRect(0, 0, width, height);
 
+                //я хз пока как, но допустим полотно квадратное todo переделать
+                let centre = width / 2;
+              //  let minusRadOfX = centre - radius;
+                let minusRadDivTwoOfX = centre - (radius / 2);
+             //   let plusRadDivTwoOfX = centre + (radius / 2);
+              //  let plusRadOfX = centre + radius;
+                //ПОМНИМ, ЧТО Y РАСТЁТ ВНИЗ!
+                let plusRadOfY = centre - radius;
+              //  let plusRadDivTwoOfY = centre - (radius / 2);
+             //   let minusRadDivTwoOfY = centre + (radius / 2);
+              //  let minusRadOfY = centre + radius;
+                //делаем обводку
+                ctx.strokeRect(0, 0, width, height);
+                //
+                ctx.beginPath();
+                //todo тут раньше было colorOfShapes, lineWidth, передавалось извне, надо теперь подумать, как тоже передавать
+                ctx.strokeStyle = 'purple';
+                ctx.fillStyle = 'purple';
+                ctx.lineWidth = 1;
+
+                //1) Рисуем фигуры
+                //1.1)Прямоугольник в третьей четверти
+                ctx.rect(centre, centre, -radius, radius/2);
+                //1.2)Арка в четвёртой четверти
+                ctx.arc(centre, centre, radius / 2, 0, Math.PI / 2, false);
+                //1.2)Арка в первой четверти
+                // context.arc(centre, centre, radius, 0, -Math.PI / 2, true);
+                //1.3)Треугольник во второй четверти
+                ctx.moveTo(minusRadDivTwoOfX, centre);
+                ctx.lineTo(centre, plusRadOfY);
+                ctx.lineTo(centre, centre);
+                ctx.moveTo(centre, centre);
+                ctx.fill(); //окрашиваем
+                ctx.stroke(); //выводим
             }
         }
         // beforeDestroy() {
