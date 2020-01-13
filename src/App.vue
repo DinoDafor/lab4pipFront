@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <!--    <router-view :key="this.$route.fullPath"/>-->
+
         <!--      todo возможно потом надо будет сделать компонент Navigation для отображения навигации, а не просто в App-->
 
         <div id="menu">
@@ -17,6 +17,7 @@
                 <router-link to="/graph">Перейти к Graph(Отладка)</router-link>
             </div>
         </div>
+
         <router-view></router-view>
 
         <!--<router-view></router-view>-->
@@ -33,9 +34,12 @@
     import NotFound from "./pages/NotFound";
     import Graph from "./components/Graph";
     import axios from "axios";
+    import Vuex from 'vuex';
+    import {eventBus} from "./main";
 
 
     Vue.use(VueRouter);
+    Vue.use(Vuex);
     //todo может ещё какие-то пути-компоненты...
     const routes = [
         {path: '/', redirect: '/login'},
@@ -69,17 +73,29 @@
                 },
             }
         },
-        methods: {  load() {
-                //Для отладки
-                // localStorage.setItem('user.login', 'bi');
-                // localStorage.setItem('user.password', 'ba');
+        created() {
+            eventBus.$on("changeLoginAndPassword", (login, password, token, auth) => {
+                //Присваиваем данные с компомнента для App, чтобы хранить todo дописать
+                this.user.login = login;
+                this.user.password = password;
+                this.user.token = token;
+                this.user.auth = auth;
+                //Сохраняем данные в localStorage
+                localStorage.setItem('user.login', this.user.login);
+                localStorage.setItem('user.password', this.user.password);
+                localStorage.setItem('user.token', this.user.token);
+                localStorage.setItem('user.auth', this.user.auth);
+
+            });
+        },
+        methods: {
+            load() {
                 //Достаём логин и пароль с локального хранилища
                 let login = localStorage.getItem('user.login');
                 let password = localStorage.getItem('user.password');
                 //  let token = localStorage.getItem('user.token');
                 //Если они существуют, то мы делаем запрос на сервер для подтверждения данных, после чего пользователь переходит сразу в main
                 if (login && password) {
-                    alert("zasli?");
                     axios.post('http://192.168.1.42:8080/api/users/login', {
                         login: login,
                         password: password,
@@ -102,6 +118,10 @@
                                 //При ошибке авторизации удаляем данные из локального хранилища, так как они являются невалидными
                                 localStorage.removeItem('user.login');
                                 localStorage.removeItem('user.password');
+
+                                // localStorage.removeItem('user.token');
+                                // localStorage.removeItem('user.auth');
+
                                 this.$router.push({path: '/login'});
                             }
                         }
@@ -112,11 +132,12 @@
                     //todo добавить тост приветствующий пользователя
                     // onAppLoaded();
                 }
-            }},
+            }
+        },
         watch: {},
 
         mounted() {
-          this.load();
+            this.load();
         }
     }
 </script>
@@ -124,12 +145,13 @@
 <style>
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css');
-    body{
+
+    body {
         font-family: 'Open Sans', 'sans-serif', 'FontAwesome';
         background-color: #111;
     }
 
-    #menu{
+    #menu {
         list-style-type: none;
         margin: 0;
         padding: 0;

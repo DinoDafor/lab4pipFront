@@ -20,6 +20,7 @@
 
     import VueRouter from "vue-router";
     import Toasted from 'vue-toasted'
+    import {eventBus} from "../main";
 
     Vue.use(VueRouter);
     Vue.use(Toasted);
@@ -169,17 +170,15 @@
 
                     })
                         .then((response) => {//при ответе от сервера
-                            //todo токен надо присвойть в другое место, в хранилище
-                            let token = JSON.stringify(response.data.message);
-                            //
-                            this.$parent.user.login = this.form.login;
-                            this.$parent.user.token = token;
-                            this.$parent.user.auth = true;
-                            //Сохраняем логин и пароль в локальном хранилище для след авторизации
-                            localStorage.setItem('user.login', this.form.login);
-                            localStorage.setItem('user.password', this.form.password);
-                            this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
-                            this.$router.push({path: '/main'});
+                                //todo токен надо присвойть в другое место, в хранилище
+                                let token = JSON.stringify(response.data.message);
+                                let auth = true;
+                                //Отправляем через шину данные в хранилище(App) для того, чтобы хранить и там, и в localStorage
+                                eventBus.$emit("changeLoginAndPassword", this.form.login, this.form.password, token, auth);
+                                //Уведомляем пользователя
+                                this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
+                                //Переадресовываем на main
+                                this.$router.push({path: '/main'});
                         })
                         .catch((error) => {
 
