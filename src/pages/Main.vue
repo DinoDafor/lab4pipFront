@@ -49,6 +49,7 @@
     import Button from "../components/Button";
     import Graph from "../components/Graph";
     import axios from 'axios'
+    //import {eventBus} from "../main";
 
 
     export default {
@@ -59,6 +60,13 @@
         name: "Main",
         data() {
             return {
+                user: {
+                    auth: false,
+                    login: null,
+                    password: null,
+                    token: null,
+
+                },
                 x: '',
                 y: '',
                 r: '',
@@ -67,19 +75,25 @@
         },
         methods: {
             sendCoordinates() {
-                alert(">?");
-                alert();
-                if (this.$root.user.login === '') {
-                    alert("Нет логина")
+                //todo Скорее всего придётся заменить
+
+
+                this.user.login = localStorage.getItem('user.login');
+                this.user.password = localStorage.getItem('user.password');
+                this.user.token = localStorage.getItem('user.token');
+                this.user.auth = localStorage.getItem('user.auth');
+//todo сделать auth false
+                if (this.user.login === null) {
+                    alert("Логин null")
                     //this.createErrorToast("The login cannot be empty!", 3000)
-                } else if (this.$root.user.password === '') {
-                    alert("Нет пароля")
+                } else if (this.user.password === null) {
+                    alert("Пароль null")
                     //this.createErrorToast("The password cannot be empty!", 3000)
-                } else if (this.$root.user.auth === false) {
-                    alert("Нет auth")
+                } else if (this.user.auth === null) {
+                    alert("Auth null")
                     //this.createErrorToast("The password cannot be empty!", 3000)
-                } else if (this.$root.user.token === '') {
-                    alert("Нет токена")
+                } else if (this.user.token === null) {
+                    alert("Token null")
                     //this.createErrorToast("The password cannot be empty!", 3000)
                 } else if (this.x === '') {
                     alert("x не выбран");
@@ -155,12 +169,11 @@
 <style scoped>
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css');
-
-    #inputs {
-        position: fixed;
+    #inputs{
+        position: absolute;
     }
 
-    #mainForm select {
+    #mainForm select{
 
         border-style: solid;
         border-color: forestgreen;
@@ -170,7 +183,7 @@
         box-shadow: inset -100px -100px 0 rgb(28, 30, 33); /*Prevent yellow autofill color*/
         color: forestgreen;
         display: block;
-        width: 290px;
+        width: 310px;
         height: 45px;
         outline: 0;
         top: -2px;
@@ -178,15 +191,28 @@
         font-weight: 700;
     }
 
-    Button {
+    Button{
         top: 41.5px;
-        right: -14px;
+        right: -25px;
     }
 
-    #content {
+    #content{
         display: flex;
         justify-content: center;
     }
+
+    @media screen and (max-width : 803px) {
+        Button{
+            top: 32.5px;
+            right: -25px;
+        }
+
+        #mainForm select {
+            width: 252px;
+            height: 37.5px;
+        }
+    }
+
 
 
 </style>

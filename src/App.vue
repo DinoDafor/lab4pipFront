@@ -85,8 +85,10 @@
                 localStorage.setItem('user.password', this.user.password);
                 localStorage.setItem('user.token', this.user.token);
                 localStorage.setItem('user.auth', this.user.auth);
+                //eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
 
-            });
+            })
+
         },
         methods: {
             load() {
@@ -104,9 +106,14 @@
                         },
                     }).then((response) => {
                         //todo добавить тост, который поздравляет пользователя с возвращением
+                        //todo с localStorage подумать
                         this.user.login = login;
                         this.user.password = password;
                         this.user.token = JSON.stringify(response.data.message);
+                        //todo пока что вот так, обновляем при каждом заходе токен
+                        localStorage.setItem('user.token', this.user.token );
+                        //todo auth добавить
+                       // eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
                         this.$router.push({path: '/main'});
                         //?
                         this.user.auth = true;
@@ -119,8 +126,8 @@
                                 localStorage.removeItem('user.login');
                                 localStorage.removeItem('user.password');
 
-                                // localStorage.removeItem('user.token');
-                                // localStorage.removeItem('user.auth');
+                                 localStorage.removeItem('user.token');
+                                 localStorage.removeItem('user.auth');
 
                                 this.$router.push({path: '/login'});
                             }
@@ -145,28 +152,27 @@
 <style>
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css');
-
-    body {
+    body{
         font-family: 'Open Sans', 'sans-serif', 'FontAwesome';
         background-color: #111;
+        width: 95vw;
+        height: 120vh;
     }
 
-    #menu {
+    #menu{
         list-style-type: none;
-        margin: 0;
-        padding: 0;
         overflow: hidden;
-
         border-style: solid;
         border-color: forestgreen;
-
     }
 
     .navigation {
         float: left;
+
     }
 
     .navigation a {
+
         display: block;
         color: forestgreen;
         text-align: center;
@@ -177,6 +183,16 @@
     /* Change the link color to #111 (black) on hover */
     .navigation a:hover {
         background-color: purple;
+    }
+
+    @media screen and (max-width : 803px) {
+        .navigation a {
+            display: block;
+            color: forestgreen;
+            text-align: center;
+            padding: 7px 8px;
+            text-decoration: none;
+        }
     }
 
 

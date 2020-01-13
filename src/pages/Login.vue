@@ -2,6 +2,7 @@
     <div id="content">
         <div id="login">
             <form id="loginForm" @submit.prevent="doLogin">
+                <img src="http://sun9-49.userapi.com/c851220/v851220524/1d1880/UMLBra64VB4.jpg" width="300" height="300">
                 <TextInput v-model="form.login"></TextInput>
                 <TextInput v-model="form.password"></TextInput>
                 <Button type="submit">&#9658;</Button>
@@ -215,16 +216,15 @@
 
 
 <style scoped>
+
     #login {
-        position: fixed;
+        position: absolute;
         width: 320px;
-        left: 50%;
-        margin-left: -160px;
-        top: 50%;
-        margin-top: -75px;
+        margin:auto
     }
 
     #loginForm {
+
         height: 90px;
         width: 300px;
         display: block;
@@ -233,16 +233,40 @@
         top: 44px;
         margin-left: 20px;
         z-index: 1;
+
     }
 
-    Button{
-        top: 19px;
+    #loginForm Button{
+        top: 325px;
         right: -24px;
     }
 
     #content{
         display: flex;
         justify-content: center;
+
+
     }
+
+
+
+    @media screen and (max-width : 803px) {
+        #loginForm {
+            height: 75px;
+            width: 250px;
+        }
+
+        #loginForm Button{
+            top: 269px;
+            right: 20px;
+        }
+
+        img{
+            width: 250px;
+            height: 250px;
+        }
+
+    }
+
 
 </style>

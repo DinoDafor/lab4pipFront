@@ -53,4 +53,16 @@
     ::placeholder{
         color: forestgreen;
     }
+
+
+
+
+    @media screen and (max-width : 803px) {
+        .text {
+            width: 233px;
+            height: 37.5px;
+
+        }
+    }
+
 </style>

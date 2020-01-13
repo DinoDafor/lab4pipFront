@@ -1,12 +1,15 @@
 <template>
+    <div id="content">
     <div id="registration">
         <form id="registrationForm" @submit.prevent="doRegister">
+            <img src="http://sun9-49.userapi.com/c851220/v851220524/1d1880/UMLBra64VB4.jpg" width="300" height="300">
             <TextInput v-model="form.login"></TextInput>
             <TextInput v-model="form.password">
 
             </TextInput>
             <Button type="submit">&#9658;</Button>
         </form>
+    </div>
     </div>
 </template>
 
@@ -86,10 +89,7 @@
     #registration {
         position: absolute;
         width: 320px;
-        left: 50%;
-        margin-left: -160px;
-        top: 50%;
-        margin-top: -75px;
+        margin:auto
     }
 
     #registrationForm {
@@ -104,9 +104,30 @@
         z-index: 1;
     }
 
-    Button{
-        top: 19px;
+    #content{
+        display: flex;
+        justify-content: center;
+    }
+
+    #registrationForm Button{
+        top: 325px;
         right: -24px;
     }
 
+    @media screen and (max-width : 803px) {
+        #registrationForm Button{
+            top: 269px;
+            right: 20px;
+        }
+
+        #registrationForm {
+            height: 75px;
+            width: 250px;
+        }
+
+        img{
+            width: 250px;
+            height: 250px;
+        }
+    }
 </style>
