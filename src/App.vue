@@ -24,6 +24,8 @@
     import Main from "./pages/Main";
     import NotFound from "./pages/NotFound";
     import Graph from "./components/Graph";
+    import axios from "axios";
+
 
     Vue.use(VueRouter);
     //todo может ещё какие-то пути-компоненты...
@@ -32,7 +34,7 @@
         {path: '/login', component: Login},
         {path: '/register', component: Registration},
         {path: '/main', component: Main},
-        {path:'/graph', component:Graph},
+        {path: '/graph', component: Graph},
         {path: '*', component: NotFound},
 
     ];
@@ -47,7 +49,66 @@
     export default {
         name: 'app',
         //components говорит нам о том, что мы можем использовать эти зарегистрированные компоненты здесь
-        components: {}, router
+        components: {}, router,
+        data() {
+            return {
+                user: {
+                    auth: false,
+                    login: null,
+                    password: null,
+                    token: null,
+                    //    todo Добавить mail?
+                },
+            }
+        },
+        methods: {},
+        watch: {},
+
+        mounted: {
+            load() {
+                alert("privet");
+                //Для отладки
+                localStorage.setItem('user.login', 'bi');
+                localStorage.setItem('user.password', 'ba');
+                //Достаём логин и пароль с локального хранилища
+                let login = localStorage.getItem('user.login');
+                let password = localStorage.getItem('user.password');
+                //  let token = localStorage.getItem('user.token');
+                //Если они существуют, то мы делаем запрос на сервер для подтверждения данных, после чего пользователь переходит сразу в main
+                if (login && password) {
+                    alert("zasli?");
+                    axios.post('http://192.168.1.42:8080/api/users/login', {
+                        login: login,
+                        password: password,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    }).then((response) => {
+                        this.user.login = login;
+                        this.user.password = password;
+                        this.user.token = JSON.stringify(response.data.message);
+                        this.$router.push({path: '/main'});
+                        //?
+                        this.user.auth = true;
+                    }).catch((error) => {
+                        if (error.response) {
+                            let statusFromServer = error.response.status;
+                            if (statusFromServer === 401) {
+                                //При ошибке удаляем данные из локального хранилища, так как они являются невалидными
+                                localStorage.removeItem('user.login');
+                                localStorage.removeItem('user.password');
+                                //?
+                                this.$router.replace({path: '/login'});
+                            }
+                        }
+                    }).finally(() => {
+                        // onAppLoaded();
+                    });
+                } else {
+                    // onAppLoaded();
+                }
+            }
+        }
     }
 </script>
 

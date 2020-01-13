@@ -3,9 +3,7 @@
         <form class="loginForm" @submit.prevent="doLogin">
             {{info}}
             <TextInput v-model="form.login">Login:</TextInput>
-            {{form.login}}
             <TextInput v-model="form.password">Password:</TextInput>
-            {{form.password}}
             <br/>
             {{error}}
 
@@ -167,49 +165,50 @@
                     this.createErrorToast("The login cannot be empty!", 3000)
                 } else if (this.form.password === '') {
                     this.createErrorToast("The password cannot be empty!", 3000)
-                } else { //сюда надо будет вставить пост запрос
-                }
-                //todo пока что без валидации происходит отправка, для отладки
-                axios.post('http://192.168.1.42:8080/api/users/login', {
-                    //заполняем данные для отправки
-                    login: this.form.login,
-                    password: this.form.password,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                } else {
+                    axios.post('http://192.168.1.42:8080/api/users/login', {
+                        //заполняем данные для отправки
+                        login: this.form.login,
+                        password: this.form.password,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
 
-                })
-                    .then(function (response) {
-                        alert(JSON.stringify(response.data));
-                        //при ответе от сервера
-//todo здесь сделать логику присваивания от сервера + пуш роутера на мейн
-                        // this.$router.push({ path: '/main' });
-                        //this.createSuccessToast("You have successfully logged in!", 3000)
-                        this.response = response;
                     })
-                    .catch(function (error) {
+                        .then((response) => {//при ответе от сервера
+                            //todo токен надо присвойть в другое место, в хранилище
+                            let token = JSON.stringify(response.data.message);
+                            //
+                            this.$parent.user.name = this.form.login;
+                            this.$parent.user.token = token;
+                            this.$parent.user.auth = true;
+                            this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
+                             this.$router.push({ path: '/main' });
+                        })
+                        .catch((error) => {
 
-                        if (error.response) {//при ошибке от сервера
+                            if (error.response) {//при ошибке от сервера
 
-                            // let status = error.response.status;
-                            // let data =error.response.data;
+                                let statusFromServer = error.response.status;
+                                if (statusFromServer === 401) {
+                                    //Срабатывает
+                                    this.createErrorToast('Wrong username or password!', 3000);
+                                } else if (statusFromServer === 400) {
+                                    //Никогда не сработает, потому что не даёт отправить форму, если она пуста
+                                    this.createErrorToast('Empty username or password!', 3000);
+                                }
 
+                            } else if (error.request) {//при ошибке запроса
+                                this.createErrorToast('You are offline, check your Internet connection!', 3000);
+                            } else {
+                                this.createErrorToast('Unknown error!', 3000);
+                            }
 
-                        } else if (error.request) {//при ошибке запроса
+                        }).finally(() => {
+                        //
 
-                            alert('!');
-                            alert(error.request);
-                        } else {
-                            //НЕИЗВЕСТНАЯ ОШИБКА
-                        }
-
-                        alert(error);
-                        this.error = error;
-                    }).finally(() => {
-                    //Совершаем в любом случае
-                    // this.loading = false;
-                    // this.form.password = '';
-                });
+                    });
+                }
 
 
             }
