@@ -1,19 +1,12 @@
 <template>
-    <div class="login">
-        <form class="loginForm" @submit.prevent="doLogin">
-            {{info}}
-            <TextInput v-model="form.login">Login:</TextInput>
-            <TextInput v-model="form.password">Password:</TextInput>
-            <br/>
-            {{error}}
-
-
-            <!--            <router-link to="/registration">Перейти к Foo</router-link>-->
-
-
-            <Button type="submit">Поздороваться со Свиньёй</Button>
-        </form>
-        <Button @click="$toasted.global.loginSuccess"></Button>
+    <div id="content">
+        <div id="login">
+            <form id="loginForm" @submit.prevent="doLogin">
+                <TextInput v-model="form.login"></TextInput>
+                <TextInput v-model="form.password"></TextInput>
+                <Button type="submit">&#9658;</Button>
+            </form>
+        </div>
     </div>
 
 </template>
@@ -186,7 +179,7 @@
                             localStorage.setItem('user.login', this.form.login);
                             localStorage.setItem('user.password', this.form.password);
                             this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
-                             this.$router.push({ path: '/main' });
+                            this.$router.push({path: '/main'});
                         })
                         .catch((error) => {
 
@@ -221,9 +214,36 @@
     }
 </script>
 
-<style scoped>
-    .login {
 
+<style scoped>
+    #login {
+        position: fixed;
+        width: 320px;
+        left: 50%;
+        margin-left: -160px;
+        top: 50%;
+        margin-top: -75px;
+    }
+
+    #loginForm {
+        height: 90px;
+        width: 300px;
+        display: block;
+        background: rgb(52, 56, 61);
+        content: '';
+        top: 44px;
+        margin-left: 20px;
+        z-index: 1;
+    }
+
+    Button{
+        top: 19px;
+        right: -24px;
+    }
+
+    #content{
+        display: flex;
+        justify-content: center;
     }
 
 </style>

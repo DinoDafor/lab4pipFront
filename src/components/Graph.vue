@@ -381,5 +381,11 @@ this.draw1();
 </script>
 
 <style scoped>
-    /*СТиль добавить*/
+    .canvas{
+        border-style: solid;
+        border-color: forestgreen;
+        border-width: 0.5px;
+        display: block;
+        margin: auto;
+    }
 </style>

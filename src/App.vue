@@ -3,11 +3,19 @@
         <!--    <router-view :key="this.$route.fullPath"/>-->
         <!--      todo возможно потом надо будет сделать компонент Navigation для отображения навигации, а не просто в App-->
 
-        <div class="navigation">
-            <router-link to="/login">Знакомы уже с Кабаном?</router-link>
-            <router-link to="/register">Не знакомы ещё с Кабаном?</router-link>
-            <router-link to="/main">Перейти к Main(Отладка)</router-link>
-            <router-link to="/graph">Перейти к Graph(Отладка)</router-link>
+        <div id="menu">
+            <div class="navigation">
+                <router-link to="/login">Знакомы уже с Кабаном?</router-link>
+            </div>
+            <div class="navigation">
+                <router-link to="/register">Не знакомы ещё с Кабаном?</router-link>
+            </div>
+            <div class="navigation">
+                <router-link to="/main">Перейти к Main(Отладка)</router-link>
+            </div>
+            <div class="navigation">
+                <router-link to="/graph">Перейти к Graph(Отладка)</router-link>
+            </div>
         </div>
         <router-view></router-view>
 
@@ -114,9 +122,41 @@
 </script>
 
 <style>
-    .navigation {
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css');
+    body{
+        font-family: 'Open Sans', 'sans-serif', 'FontAwesome';
+        background-color: #111;
+    }
+
+    #menu{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+
+        border-style: solid;
+        border-color: forestgreen;
 
     }
+
+    .navigation {
+        float: left;
+    }
+
+    .navigation a {
+        display: block;
+        color: forestgreen;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    /* Change the link color to #111 (black) on hover */
+    .navigation a:hover {
+        background-color: purple;
+    }
+
 
     /*#app {*/
     /*  font-family: 'Avenir', Helvetica, Arial, sans-serif;*/

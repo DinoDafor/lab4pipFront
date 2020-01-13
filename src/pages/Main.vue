@@ -1,43 +1,46 @@
 <template>
-    <div class="main">
+    <div id="main">
         <Graph></Graph>
-
-        <form class="mainForm">
-            X:<select v-model="x">
-            <option disabled value="">Выберите X</option>
-            <option>-2</option>
-            <option>-1.5</option>
-            <option>-1</option>
-            <option>-0.5</option>
-            <option>0</option>
-            <option>0.5</option>
-            <option>1</option>
-            <option>1.5</option>
-            <option>2</option>
-        </select>
-            <span>Выбрано {{x}}</span>
-            Y:
-            <TextInput placeholder="(-3 ... 3)"></TextInput>
-
-            R:<select v-model="r">
-            <option disabled value="">Выберите R</option>
-            <option>-2</option>
-            <option>-1.5</option>
-            <option>-1</option>
-            <option>-0.5</option>
-            <option>0</option>
-            <option>0.5</option>
-            <option>1</option>
-            <option>1.5</option>
-            <option>2</option>
-        </select>
-            <span>Выбрано {{r}}</span>
-            <Button>Отправить</Button>
+        <div id="content">
+            <div id="inputs">
+                <form id="mainForm">
+                    <select v-model="x">
+                        <option disabled value="">Выберите X</option>
+                        <option>-2</option>
+                        <option>-1.5</option>
+                        <option>-1</option>
+                        <option>-0.5</option>
+                        <option>0</option>
+                        <option>0.5</option>
+                        <option>1</option>
+                        <option>1.5</option>
+                        <option>2</option>
+                    </select>
 
 
-        </form>
-        <Button></Button>
+                    <TextInput placeholder="(-3 ... 3)"></TextInput>
+
+                    <select v-model="r">
+                        <option disabled value="">Выберите R</option>
+                        <option>-2</option>
+                        <option>-1.5</option>
+                        <option>-1</option>
+                        <option>-0.5</option>
+                        <option>0</option>
+                        <option>0.5</option>
+                        <option>1</option>
+                        <option>1.5</option>
+                        <option>2</option>
+                    </select>
+                    <Button>&#9658;</Button>
+
+
+                </form>
+            </div>
+        </div>
     </div>
+
+
 </template>
 
 <script>
@@ -64,10 +67,44 @@
         },
 
 
-
     }
 </script>
 
 <style scoped>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css');
+
+    #inputs {
+        position: fixed;
+    }
+
+    #mainForm select {
+
+        border-style: solid;
+        border-color: forestgreen;
+        border-width: 0.5px;
+        font-family: 'Open Sans', 'sans-serif', 'FontAwesome';
+        background-color: rgb(28, 30, 33);
+        box-shadow: inset -100px -100px 0 rgb(28, 30, 33); /*Prevent yellow autofill color*/
+        color: forestgreen;
+        display: block;
+        width: 290px;
+        height: 45px;
+        outline: 0;
+        top: -2px;
+        padding: 0 0 0 20px;
+        font-weight: 700;
+    }
+
+    Button {
+        top: 41.5px;
+        right: -14px;
+    }
+
+    #content {
+        display: flex;
+        justify-content: center;
+    }
+
 
 </style>

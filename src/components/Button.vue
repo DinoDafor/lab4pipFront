@@ -1,5 +1,5 @@
 <template>
-    <button :type="type" @click="$emit('click')">
+    <button :type="type" @click="$emit('click' )" class="click">
         <slot/>
         <!--        slot нужен для вставки "названия" кнопки - "Отправить", "Сбросить" -->
         <!--        v-bind является связкой компонента и html -->
@@ -21,38 +21,30 @@
     }
 </script>
 
-<style scoped lang="scss">
-    button {
-        margin:  0 25% 0 25% ;
-        padding: 10px 15px;
-        border-radius: 4px;
-        border: 1px #bbb solid;
-        background: #0be500;
+<style>
+    .click{
+        display: block;
+        position: absolute;
+        width: 52px;
+        height: 52px;
+        color: forestgreen;
+        border-radius: 50px;
+        outline: 0;
+        z-index: 2;
+
+        border: 6px solid forestgreen;
+        font-size: 25px;
+        text-indent: 0px;
+        padding-left: 9px;
+        padding-bottom: 3px;
+        text-align: center;
+        background: rgb(28, 30, 33);
+        box-shadow: inset -100px -100px 0 rgb(28, 30, 33);
+    }
+
+    .click:hover{
+        color: purple;
+        text-shadow: 0 0 10px purple;
         cursor: pointer;
-        outline: none;
-        user-select: none;
-
-        &:active {
-            background: rgb(180, 180, 180);
-        }
-
-        &[ghost] {
-            border-color: white;
-            border-width: 2px;
-            background: rgba(255, 255, 255, .25);
-        }
-
-        &[disabled] {
-            opacity: 0.5;
-        }
-
-        &[green] {
-            background-color: #adffc3;
-            border: 1px #82bf91 solid;
-
-            &:active {
-                background-color: #79b389;
-            }
-        }
     }
 </style>

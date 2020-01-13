@@ -1,9 +1,11 @@
 <template>
-    <div class="registration">
-        <form class="registrationForm" @submit.prevent="doRegister">
-            <TextInput v-model="form.login">Login:</TextInput>
-            <TextInput v-model="form.password">Password:</TextInput>
-            <Button type="submit">Познакомиться со Свиньёй</Button>
+    <div id="registration">
+        <form id="registrationForm" @submit.prevent="doRegister">
+            <TextInput v-model="form.login"></TextInput>
+            <TextInput v-model="form.password">
+
+            </TextInput>
+            <Button type="submit">&#9658;</Button>
         </form>
     </div>
 </template>
@@ -79,6 +81,32 @@
     }
 </script>
 
+
 <style scoped>
+    #registration {
+        position: absolute;
+        width: 320px;
+        left: 50%;
+        margin-left: -160px;
+        top: 50%;
+        margin-top: -75px;
+    }
+
+    #registrationForm {
+        height: 90px;
+        width: 300px;
+
+        display: block;
+        background: rgb(52, 56, 61);
+        content: '';
+        top: 44px;
+        margin-left: 20px;
+        z-index: 1;
+    }
+
+    Button{
+        top: 19px;
+        right: -24px;
+    }
 
 </style>
