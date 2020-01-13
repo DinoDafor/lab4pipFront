@@ -36,7 +36,7 @@
 
 
         </form>
-        <Button @submit=" this.$root.user.auth"></Button>
+        <Button></Button>
     </div>
 </template>
 
@@ -62,6 +62,7 @@
 
             }
         },
+
 
 
     }

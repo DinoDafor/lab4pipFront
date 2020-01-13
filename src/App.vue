@@ -61,15 +61,10 @@
                 },
             }
         },
-        methods: {},
-        watch: {},
-
-        mounted: {
-            load() {
-                alert("privet");
+        methods: {  load() {
                 //Для отладки
-                localStorage.setItem('user.login', 'bi');
-                localStorage.setItem('user.password', 'ba');
+                // localStorage.setItem('user.login', 'bi');
+                // localStorage.setItem('user.password', 'ba');
                 //Достаём логин и пароль с локального хранилища
                 let login = localStorage.getItem('user.login');
                 let password = localStorage.getItem('user.password');
@@ -84,6 +79,7 @@
                             'Content-Type': 'application/json'
                         },
                     }).then((response) => {
+                        //todo добавить тост, который поздравляет пользователя с возвращением
                         this.user.login = login;
                         this.user.password = password;
                         this.user.token = JSON.stringify(response.data.message);
@@ -94,20 +90,25 @@
                         if (error.response) {
                             let statusFromServer = error.response.status;
                             if (statusFromServer === 401) {
-                                //При ошибке удаляем данные из локального хранилища, так как они являются невалидными
+                                //todo добавить тост, который говорит, что нельзя менять локалстор или произошла ошибка с ним
+                                //При ошибке авторизации удаляем данные из локального хранилища, так как они являются невалидными
                                 localStorage.removeItem('user.login');
                                 localStorage.removeItem('user.password');
-                                //?
-                                this.$router.replace({path: '/login'});
+                                this.$router.push({path: '/login'});
                             }
                         }
                     }).finally(() => {
                         // onAppLoaded();
                     });
                 } else {
+                    //todo добавить тост приветствующий пользователя
                     // onAppLoaded();
                 }
-            }
+            }},
+        watch: {},
+
+        mounted() {
+          this.load();
         }
     }
 </script>
