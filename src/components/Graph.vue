@@ -36,7 +36,7 @@
                 }
 
             },
-            dots(){
+            dots() {
                 this.draw();
                 this.toDrawCirclesOnCanvas();
             }
@@ -124,7 +124,9 @@
                     }
                 })
                     .then(() => {//при ответе от сервера
-
+                        //todo сделать надо событие из дочернего компонента на мейн
+                        this.$emit('updateTable');
+                        this.draw();
                         // //todo токен надо присвойть в другое место, в хранилище
                         // let token = JSON.stringify(response.data.message);
                         // //
@@ -163,18 +165,25 @@
 
                 });
 
-                //todo сделать надо событие из дочернего компонента на мейн
-                this.$emit('updateTable');
-                this.draw();
-
-
-
 
             },
             checkDot(x, y, r) {
-                if (x <= 0 && y <= 0 && x >= -r && y >= -r / 2) return true;
-                if (x <= 0 && y >= 0 && y <= x * 2 + r) return true;
-                if (x >= 0 && y <= 0 && x * x + y * y < r * r / 4) return true;
+                // alert("x " + x);
+                // alert("y " + y);
+                // alert("r " + r);
+                // alert("Зашли в чекдот");
+
+                if (x <= 0 && y <= 0 && x >= -r && y >= -r / 2) {
+                    //alert("зашли в 3 четверть");
+                    return true;
+                } else if (x <= 0 && y >= 0 && y <= 2 * x + (+r)) {
+
+                    return true;
+                } else if (x >= 0 && y <= 0 && x * x + y * y < r * r / 4) {
+                    // alert("зашли в 4 четверть");
+                    return true;
+                }
+                // alert("никуда не зашли");
                 return false;
             },
             toDrawCirclesOnCanvas() {
@@ -190,6 +199,7 @@
                     //   let result = this.dots[i].newInArea;
 
                     let resultForCanvas = this.checkDot(x, y, this.$props.r);
+                    // alert(resultForCanvas);
 
 //функция, которая принимает радиус, который мы выбрали и возвращает бул result
                     pixelX = pixelX + 125;
