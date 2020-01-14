@@ -3,22 +3,39 @@
         <!--wi he сделать входными, через : -->
         <canvas class="canvas"
                 ref="canvas"
-                width="250"
-                height="250"
+                v-bind:width="$props.width"
+                v-bind:height="$props.height"
         />
+
 
     </div>
 </template>
 
 <script>
+
+
     export default {
         name: "Graph",
+        components: {},
         props: {
+            dots: Array,
             width: Number,
             height: Number,
             value: Number,
             r: Number,
             prevResults: Number,
+        },
+        watch: {
+            r() {
+                if (this.$props.r <= 0) {
+//todo  сделать мем
+                } else {
+                    this.draw();
+                    this.toDrawCirclesOnCanvas();
+                }
+
+            },
+
         },
         data() {
             return {
@@ -53,24 +70,26 @@
         // },
         mounted() {
             this.canvasContext = this.$refs.canvas.getContext('2d');
-            //Более гибкая функция moveTo
-            this.canvasContext.mv = function (x, y) {
-                this.moveTo(x * this.width, y * this.height);
-            };
-            //Более гибкая функция lineTo
-            this.canvasContext.ln = function (x, y) {
-                this.lineTo(x * this.width, y * this.height);
-            };
-            //Более гибкая функция fillText
-            this.canvasContext.txt = function (text, x, y) {
-                this.fillText(text, x * this.width, y * this.height);
-            };
-            //временно, это входные данные
-            this.$props.width = 250;
-            this.$props.height = 250;
-            this.$props.r = 100; //это должно быть пиксельно, раньше было 50 px
+            // //Более гибкая функция moveTo
+            // this.canvasContext.mv = function (x, y) {
+            //     this.moveTo(x * this.width, y * this.height);
+            // };
+            // //Более гибкая функция lineTo
+            // this.canvasContext.ln = function (x, y) {
+            //     this.lineTo(x * this.width, y * this.height);
+            // };
+            // //Более гибкая функция fillText
+            // this.canvasContext.txt = function (text, x, y) {
+            //     this.fillText(text, x * this.width, y * this.height);
+            // };
+            //todo временно, это входные данные
+            //this.$props.width = 250;
+            // this.$props.height = 250;
+            //this.$props.r = 100; //это должно быть пиксельно, раньше было 50 px
             //временно
-this.draw1();
+            this.draw();
+
+            //this.toDrawCirclesOnCanvas();
             //this.draw();
             //Рисуем график
             // this.render();
@@ -78,12 +97,97 @@ this.draw1();
             // this.rUpdatingIntervalId = setInterval(this.updateR, 1000 / 60);
         },
         methods: {//Тестовые методы для отрисовки
+            checkDot(x, y, r) {
+                if (x <= 0 && y <= 0 && x >= -r && y >= -r / 2) return true;
+                if (x <= 0 && y >= 0 && y <= x * 2 + r) return true;
+                if (x >= 0 && y <= 0 && x * x + y * y < r * r / 4) return true;
+                return false;
+            },
+            toDrawCirclesOnCanvas() {
+                let ctx = this.$refs.canvas.getContext('2d');
+                for (let i = 0; i < this.dots.length; i++) {
+
+                    let x = this.dots[i].newX;
+                    let y = this.dots[i].newY;
+
+                    let pixelX = x * 100 / 2.0;
+                    let pixelY = y * 100 / 2.0;
+                    //let rFromServer = this.dots[i].newR;
+                    //   let result = this.dots[i].newInArea;
+
+                    let resultForCanvas = this.checkDot(x, y, this.$props.r);
+
+//функция, которая принимает радиус, который мы выбрали и возвращает бул result
+                    pixelX = pixelX + 125;
+                    pixelY = pixelY - 125;
+                    pixelY = -pixelY;
+
+                    // alert(pixelX);
+                    // alert(pixelY);
+                    // alert(rFromServer);
+                    // alert(result);
+
+
+                    // let pixelX = x * (100 / 3.0);
+                    // let  pixelY = (y * (100 / 3.0));
+                    //
+                    // pixelX = (pixelX / oldRadius) * newRadius + 125;
+                    // pixelY = (pixelY / oldRadius) * newRadius - 125;
+                    // pixelY = -pixelY;
+
+                    ctx.beginPath();
+                    //todo оптимизировать
+                    if (resultForCanvas) {
+
+                        ctx.strokeStyle = "green";
+                        ctx.fillStyle = "green";
+
+                    } else {
+                        ctx.strokeStyle = "red";
+                        ctx.fillStyle = "red";
+                    }
+                    //todo изменить радиус кружка
+                    ctx.arc(pixelX, pixelY, 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+
+                // let result = true;
+                //
+                //
+                //
+                // let pixelX = x * (100 / 3.0);
+                // let  pixelY = (y * (100 / 3.0));
+                //
+                // pixelX = (pixelX / oldRadius) * newRadius + 125;
+                // pixelY = (pixelY / oldRadius) * newRadius - 125;
+                // pixelY = -pixelY;
+                //
+                //
+                //
+                // ctx.beginPath();
+                // //todo оптимизировать
+                // if (result) {
+                //
+                //     ctx.strokeStyle = "green";
+                //     ctx.fillStyle = "green";
+                //
+                // } else {
+                //     ctx.strokeStyle = "red";
+                //     ctx.fillStyle = "red";
+                // }
+                // //todo изменить радиус кружка
+                // ctx.arc(pixelX, pixelY, 2.5, 0, Math.PI * 2);
+                // ctx.fill();
+                // ctx.stroke();
+            },
             draw() {
                 let ctx = this.canvasContext;
                 //todo  временно, эти данные извне поступают
                 let width = this.$props.width;
                 let height = this.$props.height;
-                let radius = this.$props.r;
+                let radius = this.$props.r * 50;
                 // временно
                 ctx.clearRect(0, 0, width, height); //Очищаем график, через квадрат
                 //делаем обводку
@@ -107,8 +211,35 @@ this.draw1();
 
                 ctx.beginPath();
                 //тут раньше было colorSystem, lineWidth, передавалось извне, надо теперь подумать, как тоже передавать
-                ctx.fillStyle = 'black';
-                ctx.strokeStyle = 'black';
+                // ctx.fillStyle = 'forestgreen';
+                // ctx.strokeStyle = 'forestgreen';
+                // ctx.lineWidth = 2;
+
+                //todo временные фигуры
+                ctx.strokeStyle = 'forestgreen';
+                ctx.fillStyle = 'purple';
+                ctx.lineWidth = 1;
+
+                //1) Рисуем фигуры
+                //1.1)Прямоугольник в третьей четверти
+                ctx.rect(centre, centre, -radius, radius / 2);
+                //1.2)Арка в четвёртой четверти
+                ctx.arc(centre, centre, radius / 2, 0, Math.PI / 2, false);
+                //1.2)Арка в первой четверти
+                // context.arc(centre, centre, radius, 0, -Math.PI / 2, true);
+                //1.3)Треугольник во второй четверти
+                ctx.moveTo(minusRadDivTwoOfX, centre);
+                ctx.lineTo(centre, plusRadOfY);
+                ctx.lineTo(centre, centre);
+                ctx.moveTo(centre, centre);
+                ctx.fill(); //окрашиваем
+                ctx.stroke(); //выводим
+                ctx.closePath();
+
+                ctx.beginPath();
+
+                ctx.strokeStyle = 'forestgreen';
+                ctx.fillStyle = 'forestgreen';
                 ctx.lineWidth = 2;
 
                 //Стрелка по Y вниз
@@ -189,6 +320,7 @@ this.draw1();
                 ctx.fillText("R/2", plusRadDivTwoOfX, centre - marking);
                 ctx.fillText("R", plusRadOfX, centre - marking);
                 ctx.stroke();
+                ctx.closePath();
 
 
             },
@@ -203,15 +335,15 @@ this.draw1();
 
                 //я хз пока как, но допустим полотно квадратное todo переделать
                 let centre = width / 2;
-              //  let minusRadOfX = centre - radius;
+                //  let minusRadOfX = centre - radius;
                 let minusRadDivTwoOfX = centre - (radius / 2);
-             //   let plusRadDivTwoOfX = centre + (radius / 2);
-              //  let plusRadOfX = centre + radius;
+                //   let plusRadDivTwoOfX = centre + (radius / 2);
+                //  let plusRadOfX = centre + radius;
                 //ПОМНИМ, ЧТО Y РАСТЁТ ВНИЗ!
                 let plusRadOfY = centre - radius;
-              //  let plusRadDivTwoOfY = centre - (radius / 2);
-             //   let minusRadDivTwoOfY = centre + (radius / 2);
-              //  let minusRadOfY = centre + radius;
+                //  let plusRadDivTwoOfY = centre - (radius / 2);
+                //   let minusRadDivTwoOfY = centre + (radius / 2);
+                //  let minusRadOfY = centre + radius;
                 //делаем обводку
                 ctx.strokeRect(0, 0, width, height);
                 //
@@ -223,7 +355,7 @@ this.draw1();
 
                 //1) Рисуем фигуры
                 //1.1)Прямоугольник в третьей четверти
-                ctx.rect(centre, centre, -radius, radius/2);
+                ctx.rect(centre, centre, -radius, radius / 2);
                 //1.2)Арка в четвёртой четверти
                 ctx.arc(centre, centre, radius / 2, 0, Math.PI / 2, false);
                 //1.2)Арка в первой четверти
@@ -381,7 +513,7 @@ this.draw1();
 </script>
 
 <style scoped>
-    .canvas{
+    .canvas {
         border-style: solid;
         border-color: forestgreen;
         border-width: 0.5px;
