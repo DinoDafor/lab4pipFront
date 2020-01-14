@@ -83,7 +83,7 @@
                 //Сохраняем данные в localStorage
                 localStorage.setItem('user.login', this.user.login);
                 localStorage.setItem('user.password', this.user.password);
-                localStorage.setItem('user.token', this.user.token);
+                localStorage.setItem('user.token', this.user.token.split("\"").join('').trim());
                 localStorage.setItem('user.auth', this.user.auth);
                 //eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
 
@@ -110,10 +110,10 @@
                         this.user.login = login;
                         this.user.password = password;
                         this.user.token = JSON.stringify(response.data.message);
-                        //todo пока что вот так, обновляем при каждом заходе токен
-                        localStorage.setItem('user.token', this.user.token );
+                        //todo пока что вот так, обновляем при каждом заходе токен, убираем "
+                        localStorage.setItem('user.token', this.user.token.split("\"").join('').trim());
                         //todo auth добавить
-                       // eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
+                        // eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
                         this.$router.push({path: '/main'});
                         //?
                         this.user.auth = true;
@@ -125,9 +125,8 @@
                                 //При ошибке авторизации удаляем данные из локального хранилища, так как они являются невалидными
                                 localStorage.removeItem('user.login');
                                 localStorage.removeItem('user.password');
-
-                                 localStorage.removeItem('user.token');
-                                 localStorage.removeItem('user.auth');
+                                localStorage.removeItem('user.token');
+                                localStorage.removeItem('user.auth');
 
                                 this.$router.push({path: '/login'});
                             }
@@ -152,14 +151,15 @@
 <style>
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css');
-    body{
+
+    body {
         font-family: 'Open Sans', 'sans-serif', 'FontAwesome';
         background-color: #111;
         width: 95vw;
         height: 120vh;
     }
 
-    #menu{
+    #menu {
         list-style-type: none;
         overflow: hidden;
         border-style: solid;
@@ -185,7 +185,7 @@
         background-color: purple;
     }
 
-    @media screen and (max-width : 803px) {
+    @media screen and (max-width: 803px) {
         .navigation a {
             display: block;
             color: forestgreen;
