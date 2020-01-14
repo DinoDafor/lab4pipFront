@@ -3,8 +3,8 @@
     <div id="registration">
         <form id="registrationForm" @submit.prevent="doRegister">
             <img src="http://sun9-49.userapi.com/c851220/v851220524/1d1880/UMLBra64VB4.jpg" width="300" height="300">
-            <TextInput v-model="form.login"></TextInput>
-            <TextInput v-model="form.password">
+            <TextInput v-model="form.login" placeholder="Представиться свинье"></TextInput>
+            <TextInput v-model="form.password" placeholder="Придумать свой пароль">
 
             </TextInput>
             <Button type="submit">&#9658;</Button>
@@ -128,6 +128,22 @@
         img{
             width: 250px;
             height: 250px;
+        }
+    }
+
+    @media screen and (min-width : 1138px) {
+        #registrationForm img{
+            width: 450px;
+            height: 450px;
+        }
+
+        #registrationForm Button{
+            top: 476.7px;
+            right: -177px;
+        }
+
+        #registrationForm {
+            width: 450px;
         }
     }
 </style>

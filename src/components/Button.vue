@@ -48,4 +48,13 @@
         cursor: pointer;
     }
 
+    @media screen and (min-width : 1138px) {
+        .click{
+            width: 70px;
+            height: 70px;
+            font-size: 35px;
+            border: 7px solid forestgreen;
+        }
+    }
+
 </style>

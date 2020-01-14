@@ -5,22 +5,16 @@
 
         <div id="menu">
             <div class="navigation">
-                <router-link to="/login">Знакомы уже с Кабаном?</router-link>
+                <router-link to="/login">Поздороваться с Кабаном</router-link>
             </div>
             <div class="navigation">
-                <router-link to="/register">Не знакомы ещё с Кабаном?</router-link>
-            </div>
-            <div class="navigation">
-                <router-link to="/main">Перейти к Main(Отладка)</router-link>
-            </div>
-            <div class="navigation">
-                <router-link to="/graph">Перейти к Graph(Отладка)</router-link>
+                <router-link to="/register">Познакомиться с Кабаном</router-link>
             </div>
         </div>
 
         <router-view></router-view>
 
-        <!--<router-view></router-view>-->
+
 
     </div>
 </template>
@@ -60,8 +54,7 @@
 
     export default {
         name: 'app',
-        //components говорит нам о том, что мы можем использовать эти зарегистрированные компоненты здесь
-        components: {}, router,
+        router,
         data() {
             return {
                 user: {
@@ -85,7 +78,7 @@
                 localStorage.setItem('user.password', this.user.password);
                 localStorage.setItem('user.token', this.user.token.split("\"").join('').trim());
                 localStorage.setItem('user.auth', this.user.auth);
-                //eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
+
 
             })
 
@@ -115,7 +108,7 @@
                         //todo auth добавить
                         // eventBus.$emit("sendToMain", this.user.login, this.user.password, this.user.token, this.user.auth);
                         this.$router.push({path: '/main'});
-                        //?
+                        //todo
                         this.user.auth = true;
                     }).catch((error) => {
                         if (error.response) {
@@ -140,8 +133,6 @@
                 }
             }
         },
-        watch: {},
-
         mounted() {
             this.load();
         }
@@ -156,7 +147,7 @@
         font-family: 'Open Sans', 'sans-serif', 'FontAwesome';
         background-color: #111;
         width: 95vw;
-        height: 120vh;
+        height: 95vh;
     }
 
     #menu {
@@ -164,11 +155,12 @@
         overflow: hidden;
         border-style: solid;
         border-color: forestgreen;
+        display: flex;
     }
 
     .navigation {
         float: left;
-
+        flex:auto;
     }
 
     .navigation a {
@@ -194,14 +186,4 @@
             text-decoration: none;
         }
     }
-
-
-    /*#app {*/
-    /*  font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
-    /*  -webkit-font-smoothing: antialiased;*/
-    /*  -moz-osx-font-smoothing: grayscale;*/
-    /*  text-align: center;*/
-    /*  color: #2c3e50;*/
-    /*  margin-top: 60px;*/
-    /*}*/
 </style>

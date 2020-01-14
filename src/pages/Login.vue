@@ -3,8 +3,8 @@
         <div id="login">
             <form id="loginForm" @submit.prevent="doLogin">
                 <img src="http://sun9-49.userapi.com/c851220/v851220524/1d1880/UMLBra64VB4.jpg" width="300" height="300">
-                <TextInput v-model="form.login"></TextInput>
-                <TextInput v-model="form.password"></TextInput>
+                <TextInput v-model="form.login" placeholder="Напомнить свинье своё имя"></TextInput>
+                <TextInput v-model="form.password" placeholder="Сказать свинье секретный пароль"></TextInput>
                 <Button type="submit">&#9658;</Button>
             </form>
         </div>
@@ -266,6 +266,22 @@
             height: 250px;
         }
 
+    }
+
+    @media screen and (min-width : 1138px) {
+        #loginForm img{
+            width: 450px;
+            height: 450px;
+        }
+
+        #loginForm Button{
+            top: 476.7px;
+            right: -177px;
+        }
+
+        #loginForm {
+            width: 450px;
+        }
     }
 
 

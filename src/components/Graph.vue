@@ -5,6 +5,7 @@
                 ref="canvas"
                 v-bind:width="$props.width"
                 v-bind:height="$props.height"
+                @click="check()"
         />
 
 
@@ -12,7 +13,7 @@
 </template>
 
 <script>
-
+    import axios from 'axios'
 
     export default {
         name: "Graph",
@@ -35,39 +36,26 @@
                 }
 
             },
+            dots(){
+                this.draw();
+                this.toDrawCirclesOnCanvas();
+            }
+
 
         },
         data() {
             return {
                 canvasContext: null,
-                // mouseDownFlag: false,
-                // rSmooth: 0,
-                // rUpdatingIntervalId: null,
+                user: {
+                    auth: false,
+                    login: null,
+                    password: null,
+                    token: null,
+
+                },
             }
         },
-        // watch: {
-        //     r() {
-        //         this.render();
-        //     },
-        //     rSmooth() {
-        //         this.render();
-        //     },
-        //     'value.x': {
-        //         handler: function () {
-        //             this.render();
-        //         },
-        //         deep: true
-        //     },
-        //     'value.y': {
-        //         handler: function () {
-        //             this.render();
-        //         },
-        //         deep: true
-        //     },
-        //     prevResults() {
-        //         this.render();
-        //     }
-        // },
+
         mounted() {
             this.canvasContext = this.$refs.canvas.getContext('2d');
             // //Более гибкая функция moveTo
@@ -97,6 +85,92 @@
             // this.rUpdatingIntervalId = setInterval(this.updateR, 1000 / 60);
         },
         methods: {//Тестовые методы для отрисовки
+            check() { //todo сделать нейминг
+                //todo БЫЛО ЗНАЧЕНИЕ document.getElementById('r').value; //берём значение радиуса из селекта ВЕРНУТЬ
+                this.user.login = localStorage.getItem('user.login');
+                this.user.password = localStorage.getItem('user.password');
+                this.user.token = localStorage.getItem('user.token');
+                this.user.auth = localStorage.getItem('user.auth');
+
+                //todo сделать проверку
+
+
+                let canvasElement = this.$refs.canvas;
+                let domRect = canvasElement.getBoundingClientRect();
+
+                let pixelX = (event.pageX - domRect.left - domRect.width / 2 - window.scrollX); //Пиксели, куда нажал пользователь на холст
+                let pixelY = -(event.pageY - domRect.top - domRect.height / 2 - window.scrollY);//Добавил минус, потому что Y растёт вниз
+
+
+                //todo если честно до я не доконца разобрался с этими формулами, хотя составил их сам, эмпирическим путём
+                let x = pixelX / (100 / 2.0); //Перевод в вещественную координату
+                let y = pixelY / (100 / 2.0);//100 пикселей, это шаг мой; 3 это граница по R
+
+
+                x = Math.round(x * 100) / 100.0; //Округляем
+                y = Math.round(y * 100) / 100.0;
+
+                axios.post('http://192.168.1.42:8080/api/dots/add', {
+                    //заполняем данные для отправки
+                    // login: this.$root.user.login,
+                    // password: this.$root.user.password,
+                    x: x,
+                    y: y,
+                    r: this.r,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': this.user.token,
+                    }
+                })
+                    .then(() => {//при ответе от сервера
+
+                        // //todo токен надо присвойть в другое место, в хранилище
+                        // let token = JSON.stringify(response.data.message);
+                        // //
+                        // this.$parent.user.login = this.form.login;
+                        // this.$parent.user.token = token;
+                        // this.$parent.user.auth = true;
+                        // //Сохраняем логин и пароль в локальном хранилище для след авторизации
+                        // localStorage.setItem('user.login', this.form.login);
+                        // localStorage.setItem('user.password', this.form.password);
+                        // this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
+                        // this.$router.push({path: '/main'});
+                    })
+                    .catch((error) => {
+
+                        if (error.response) {//при ошибке от сервера
+
+                            let statusFromServer = error.response.status;
+                            if (statusFromServer === 401) {
+                                alert('kavo');
+                                //Срабатывает
+                                // this.createErrorToast('Wrong username or password!', 3000);
+                            } else if (statusFromServer === 400) {
+                                //Никогда не сработает, потому что не даёт отправить y неправильный
+                                // this.createErrorToast('Empty username or password!', 3000);
+                            }
+
+                        } else if (error.request) {//при ошибке запроса
+                            //  this.createErrorToast('You are offline, check your Internet connection!', 3000);
+                        } else {
+
+                            //  this.createErrorToast('Unknown error!', 3000);
+                        }
+                        alert(error);
+                    }).finally(() => {
+                    //
+
+                });
+
+                //todo сделать надо событие из дочернего компонента на мейн
+                this.$emit('updateTable');
+                this.draw();
+
+
+
+
+            },
             checkDot(x, y, r) {
                 if (x <= 0 && y <= 0 && x >= -r && y >= -r / 2) return true;
                 if (x <= 0 && y >= 0 && y <= x * 2 + r) return true;
