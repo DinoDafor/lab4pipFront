@@ -133,6 +133,13 @@
 
     export default {
         name: "Login",
+        // beforeRouteLeave(to, from, next) { //не даём перейти с main
+        //     if (this.user.login) {
+        //         next()
+        //     } else {
+        //         next(false)
+        //     }
+        // },
         data() {
             return {
                 info: '',

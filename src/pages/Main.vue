@@ -71,6 +71,13 @@
             Button, TextInput, Graph
 
         },
+        // beforeRouteLeave(to, from, next) { //не даём перейти с main
+        //     if (this.user.login === '') {
+        //         next()
+        //     } else {
+        //         next(false)
+        //     }
+        // },
         name: "Main",
         data() {
             return {
@@ -83,7 +90,7 @@
                 },
                 x: '',
                 y: '',
-                r: '',
+                r: 2,
                 dots: [{
                     newX: '',
                     newY: '',
