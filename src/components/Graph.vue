@@ -57,6 +57,9 @@
             this.draw();
         },
         methods: {//Тестовые методы для отрисовки
+            createErrorToast: function (errorMessage, time) {
+                this.$toasted.error(errorMessage).goAway(time);
+            },
             check() { //todo сделать нейминг
                 //todo БЫЛО ЗНАЧЕНИЕ document.getElementById('r').value; //берём значение радиуса из селекта ВЕРНУТЬ
                 this.user.login = localStorage.getItem('user.login');
@@ -82,41 +85,47 @@
                 x = Math.round(x * 100) / 100.0; //Округляем
                 y = Math.round(y * 100) / 100.0;
 
-                axios.post('http://192.168.1.42:8080/api/dots/add', {
-                    x: x,
-                    y: y,
-                    r: this.r,
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': this.user.token,
-                    }
-                })
-                    .then(() => {//при ответе от сервера
-
-                        this.$emit('updateTable');
-                        this.draw();
-                    })
-                    .catch((error) => {
-                        if (error.response) {//при ошибке от сервера
-
-                            let statusFromServer = error.response.status;
-                            if (statusFromServer === 401) {
-
-                                //Срабатывает
-                                this.createErrorToast('Неправильный логин или пароль!', 3000);
-                            } else if (statusFromServer === 400) {
-
-                                this.createErrorToast('Пустой логин или пароль!', 3000);
-                            }
-
-                        } else if (error.request) {//при ошибке запроса
-                            this.createErrorToast('Вы оффлайн, проверьте соединение с интернетом!', 3000);
-                        } else {
-                            this.createErrorToast('Неизвестная ошибка!', 3000);
+                if (this.r < 0) {
+                    this.createErrorToast('Выберите R >0!', 3000);
+                } else if (this.r ==='') {
+                    this.createErrorToast('Выберите R!', 3000);
+                } else {
+                    axios.post('http://192.168.1.42:8080/api/dots/add', {
+                        x: x,
+                        y: y,
+                        r: this.r,
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': this.user.token,
                         }
-                        this.createErrorToast('Ошибка!', 3000);
-                    });
+                    })
+                        .then(() => {//при ответе от сервера
+
+                            this.$emit('updateTable');
+                            this.draw();
+                        })
+                        .catch((error) => {
+                            if (error.response) {//при ошибке от сервера
+
+                                let statusFromServer = error.response.status;
+                                if (statusFromServer === 401) {
+
+                                    //Срабатывает
+                                    this.createErrorToast('Неправильный логин или пароль!', 3000);
+                                } else if (statusFromServer === 400) {
+
+                                    this.createErrorToast('Пустой логин или пароль!', 3000);
+                                }
+
+                            } else if (error.request) {//при ошибке запроса
+                                this.createErrorToast('Вы оффлайн, проверьте соединение с интернетом!', 3000);
+                            } else {
+                                this.createErrorToast('Неизвестная ошибка!', 3000);
+                            }
+                            this.createErrorToast('Ошибка!', 3000);
+                        });
+                }
 
 
             },

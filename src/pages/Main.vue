@@ -64,6 +64,8 @@
     import Graph from "../components/Graph";
     import axios from 'axios'
 
+
+
     export default {
         components: {
             Button, TextInput, Graph
