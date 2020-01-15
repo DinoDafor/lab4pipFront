@@ -2,7 +2,8 @@
     <div id="content">
         <div id="login">
             <form id="loginForm" @submit.prevent="doLogin">
-                <img src="http://sun9-49.userapi.com/c851220/v851220524/1d1880/UMLBra64VB4.jpg" width="300" height="300">
+                <img src="http://sun9-49.userapi.com/c851220/v851220524/1d1880/UMLBra64VB4.jpg" width="300"
+                     height="300">
                 <TextInput v-model="form.login" placeholder="Напомнить свинье своё имя"></TextInput>
                 <TextInput v-model="form.password" placeholder="Сказать свинье секретный пароль"></TextInput>
                 <Button type="submit">&#9658;</Button>
@@ -134,7 +135,8 @@
     export default {
         name: "Login",
         // beforeRouteLeave(to, from, next) { //не даём перейти с main
-        //     if (this.user.login) {
+        //     alert(this.user.auth);
+        //     if (this.user.auth || (to.path === '/register')) {
         //         next()
         //     } else {
         //         next(false)
@@ -178,15 +180,16 @@
 
                     })
                         .then((response) => {//при ответе от сервера
-                                //todo токен надо присвойть в другое место, в хранилище
-                                let token = JSON.stringify(response.data.message);
-                                let auth = true;
-                                //Отправляем через шину данные в хранилище(App) для того, чтобы хранить и там, и в localStorage
-                                eventBus.$emit("changeLoginAndPassword", this.form.login, this.form.password, token, auth);
-                                //Уведомляем пользователя
-                                this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
-                                //Переадресовываем на main
-                                this.$router.push({path: '/main'});
+                            //todo токен надо присвойть в другое место, в хранилище
+                            let token = JSON.stringify(response.data.message);
+                            let auth = true;
+                            //Отправляем через шину данные в хранилище(App) для того, чтобы хранить и там, и в localStorage
+                            eventBus.$emit("changeLoginAndPassword", this.form.login, this.form.password, token, auth);
+                            eventBus.$emit("visibleFalse");
+                            //Уведомляем пользователя
+                            this.createSuccessToast("You have successfully logged in! Enjoy!", 3000);
+                            //Переадресовываем на main
+                            this.$router.push({path: '/main'});
                         })
                         .catch((error) => {
 
@@ -227,7 +230,7 @@
     #login {
         position: absolute;
         width: 320px;
-        margin:auto
+        margin: auto
     }
 
     #loginForm {
@@ -243,12 +246,12 @@
 
     }
 
-    #loginForm Button{
+    #loginForm Button {
         top: 325px;
         right: -24px;
     }
 
-    #content{
+    #content {
         display: flex;
         justify-content: center;
 
@@ -256,32 +259,31 @@
     }
 
 
-
-    @media screen and (max-width : 803px) {
+    @media screen and (max-width: 803px) {
         #loginForm {
             height: 75px;
             width: 250px;
         }
 
-        #loginForm Button{
+        #loginForm Button {
             top: 269px;
             right: 20px;
         }
 
-        img{
+        img {
             width: 250px;
             height: 250px;
         }
 
     }
 
-    @media screen and (min-width : 1138px) {
-        #loginForm img{
+    @media screen and (min-width: 1138px) {
+        #loginForm img {
             width: 450px;
             height: 450px;
         }
 
-        #loginForm Button{
+        #loginForm Button {
             top: 476.7px;
             right: -177px;
         }

@@ -1,5 +1,10 @@
 <template>
     <div id="main">
+        <div id="menu" v-show="true">
+            <div class="navigation">
+                <router-link  to="/login" >Попрощаться со свиньёй</router-link>
+            </div>
+        </div>
         <Graph v-bind:r="r" width="250" height="250" :dots="dots" @updateTable="getDots"></Graph>
         <div id="content">
             <div id="inputs">
@@ -36,6 +41,7 @@
 
 
                 </form>
+<!--<Button @click="logOut">Log Out</Button>-->
                 <table id="table">
                     <tr>
                         <th>X</th>
@@ -63,7 +69,7 @@
     import Button from "../components/Button";
     import Graph from "../components/Graph";
     import axios from 'axios'
-
+    import {eventBus} from "../main";
 
 
     export default {
@@ -71,12 +77,10 @@
             Button, TextInput, Graph
 
         },
-        beforeEach(to, from, next) { //не даём перейти с main
-            if (this.user.login === '') {
-                next()
-            } else {
-                next(false)
-            }
+        beforeRouteLeave(to, from, next) {
+            next();//не даём перейти с main
+            this.logOut();
+
         },
         name: "Main",
         data() {
@@ -108,6 +112,20 @@
             },
             createSuccessToast: function (successMessage, time) {
                 this.$toasted.success(successMessage).goAway(time);
+            },
+            logOut(){
+                axios.get('http://192.168.1.42:8080/api/users/logout', {
+                    headers: {
+                        'Authorization': this.user.token,
+                    }
+                });
+                localStorage.removeItem('user.login');
+                localStorage.removeItem('user.password');
+                localStorage.removeItem('user.token');
+                localStorage.removeItem('user.auth');
+
+                eventBus.$emit("visibleTrue");
+                this.$router.push("/login");
             },
             getDots() {
                 this.user.login = localStorage.getItem('user.login');
@@ -327,6 +345,8 @@
 
             }
         }, mounted() {
+          //  this.$refs.pathToLogin.to="/main";
+
             this.load();
         }
 

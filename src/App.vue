@@ -3,7 +3,7 @@
 
         <!--      todo возможно потом надо будет сделать компонент Navigation для отображения навигации, а не просто в App-->
 
-        <div id="menu">
+        <div id="menu" v-show="visible">
             <div class="navigation">
                 <router-link to="/login">Поздороваться с Кабаном</router-link>
             </div>
@@ -58,6 +58,7 @@
         router,
         data() {
             return {
+                visible:true,
                 user: {
                     auth: false,
                     login: null,
@@ -81,6 +82,12 @@
                 localStorage.setItem('user.auth', this.user.auth);
 
 
+            });
+            eventBus.$on("visibleFalse", () => {
+                this.visible = false;
+            });
+            eventBus.$on('visibleTrue', () => {
+                this.visible = true;
             })
 
         },
