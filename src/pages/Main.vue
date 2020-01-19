@@ -118,7 +118,7 @@
                     headers: {
                         'Authorization': this.user.token,
                     }
-                });
+                }); //todo добавить тостер
                 localStorage.removeItem('user.login');
                 localStorage.removeItem('user.password');
                 localStorage.removeItem('user.token');
